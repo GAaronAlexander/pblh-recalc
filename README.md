@@ -6,6 +6,8 @@ Uses WRF outputs to recalculate the PBLH heights based off of different methods 
 **Dependendencies:** numpy, matplotlib, cartopy, os, netCDF4, wrf-python, glob
 
 Instructions for installation of wrf-python can be found: https://wrf-python.readthedocs.io/en/latest/installation.html
+Instructions for installation of netCDF4 can be found: http://unidata.github.io/netcdf4-python/
+Instructions for installation of cartopy can be found: https://scitools.org.uk/cartopy/docs/v0.15/installing.html
 
 **Full Description:**
 The Weather Research and Forecasting Model outputs many different meteorlogical variables that can be used to 're-diagnose' the planetary boundary layer height. This repository uses python to provide the structure to recalculate this variable to allow for comparison between model outputs of `PBLH` and standard literature methods of `PBLH`. Currently, two different methods have been implemented. 
