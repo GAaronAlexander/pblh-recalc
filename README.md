@@ -21,5 +21,4 @@ The temperature gradient method is looks at the Lapse Rates and determines the c
 
 Instructions for a full run can be found in the main.py, and full descriptions of what different functions are doing can be found in related python files. 
 
-s
 
