@@ -41,8 +41,8 @@ tv      = np.load(tensor_directory+'tv.npy')         #k
 PBLH    = np.load(tensor_directory+'PBLH.npy')       #m
 
 ## static variables
-lats = np.load(xy+'XLAT.npy')                        #degrees
-lons = np.load(xy+'XLONG.npy')                       #degrees
+lats = np.load(static_directory+'XLAT.npy')                        #degrees
+lons = np.load(static_directory+'XLONG.npy')                       #degrees
 
 # ~~~~~~~~~~~~~~~~ Recalculation of important Variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##full descriptions found in wrf_basic_analysis_vars
@@ -60,7 +60,7 @@ lapse_rate, lapse_rate_height = temperature_gradient(theta,height,2)
 # ~~~~~~~~~~~~~~~ Rediagnosing PBLH ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ## Full descriptions can be found in PBLH_recalc
 
-PBLH_richardson_heights = PBLH_richardson(richardson_num, x, 0.2)
+PBLH_richardson_heights = PBLH_richardson(richardson_num, rich_num_height, 0.2)
 PBLH_temp_grad_heights = PBLH_temp_grad(lapse_rate, lapse_rate_height, 2)
 
 wrf_save_var(PBLH_richardson_heights, './recalculated_vars','PBLH_richardson')
@@ -68,7 +68,7 @@ wrf_save_var(PBLH_temp_grad_heights, './recalculated_vars','PBLH_temp_grad')
 
 # ~~~~~~~~~~~~~~~~ Plotting Software ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PBLH_plot(PBLH_ricardson_heights,lats,lons,single_netcdf_file,plot_richardson_direc)
+PBLH_plot(PBLH_richardson_heights,lats,lons,single_netcdf_file,plot_richardson_direc)
 PBLH_plot(PBLH_temp_grad_heights,lats,lons,single_netcdf_file,plot_temp_grad_direc)
 PBLH_plot(PBLH,lats,lons,single_netcdf_file,plot_real_wrf_pblh)
 
