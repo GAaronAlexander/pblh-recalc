@@ -16,8 +16,18 @@ def virtual_potential_temp(theta,qvapor):
 	return theta_v
 
 
-def richardson_number_profiles(height,theta_v,uwind,vwind,tv):
-	##check if this is working (strange profile numbers, local richardson number attempt, needs some work)
+def richardson_number_profiles(height,theta_v,uwind,vwind,tv,surface_level):
+	##richardson number profiles based off of surface level, this calcualtes a *local* richardson number 
+	## based off of model grid boxes, but uses the surface as the reference
+
+	## height  -----  height of model grid boxes  ---- meters
+	## theta_v -----  virtual potential temperature -- kelvin
+	## uwind   -----  u wind mass coordinates -------- meters per second
+	## vwind   -----  v wind mass coordinates -------- meters per second
+	## tv      -----  virtual temperature ------------ kelvin
+
+	## surface_level is number of levels to skip from surface 
+
 	##assertions
 	assert (len(theta_v.shape) == 4), "arrays must be 4 dimensional (time, height, lat, lon)"
 	assert (theta_v.shape == height.shape), "Theta_v and Height must be same size"
@@ -33,14 +43,19 @@ def richardson_number_profiles(height,theta_v,uwind,vwind,tv):
 	#calculate the richardson number based off of dimensional analysis
 	# of the buoyant term devided by the shear term of the N.S. Eqatuions
 
-	delta_thetav = theta_v[:,:-1,:,:] - theta_v[:,1:,:,:]
+	## determine the reference virtual temperature
+	base_level_tv = tv[:,surface_level,:,:]
+
+	delta_thetav = theta_v[:,surface_level+1:,:,:] - theta_v[:,surface_level:-1,:,:]
+	delta_u = uwind[:,surface_level+1:,:,:] - uwind[:,surface_level:-1,:,:]
+	delta_v = vwind[:,surface_level+1:,:,:] - vwind[:,surface_level:-1,:,:]
+	delta_h = height[:,surface_level+1:,:,:] - height[:,surface_level:-1,:,:]
+
+	wind = delta_u**2 + delta_v**2
+
+	richardson = ((9.81 * delta_h)/(base_level_tv[:,None,:,:])) * (delta_thetav/wind)
 	
-	wind = uwind[:,:-1,:,:]**2 + vwind[:,:-1,:,:]**2 
-	print(wind.shape)
-
-	richardson = ((9.81 * height[:,:-1,:,:])/(tv[:,:-1,:,:])) * (delta_thetav/wind)
-
-	return richardson 
+	return richardson,  height[:,surface_level:,:,:]
 
 
 def richardson_number_surface(height,theta_v,uwind,vwind,tv,surface_level):
@@ -73,12 +88,17 @@ def richardson_number_surface(height,theta_v,uwind,vwind,tv,surface_level):
 	##assume that the first two model levels are in the surface level, so create 'base level' variables
 	base_level_thetav = theta_v[:,surface_level,:,:]
 	base_level_tv = tv[:,surface_level,:,:]
+	base_level_uwind = uwind[:,surface_level,:,:]
+	base_level_vwind = vwind[:,surface_level,:,:]
 
 	## start at 3rd model level, and subtract 3-d tensor from 4-d tensor by broadcasting
 	delta_thetav = theta_v[:,surface_level:,:,:] - base_level_thetav[:,None,:,:]
 	
 	#absolute wind speed
-	wind = uwind[:,surface_level:,:,:]**2 + vwind[:,surface_level:,:,:]**2 
+	delta_u = uwind[:,surface_level:,:,:] - base_level_uwind[:,None,:,:]
+	delta_v = vwind[:,surface_level:,:,:] - base_level_vwind[:,None,:,:]
+
+	wind = delta_u**2 + delta_v**2
 
 	#unitless richardshon bulk 
 	richardson = ((9.81 * height[:,surface_level:,:,:])/(base_level_tv[:,None,:,:])) * (delta_thetav/wind)
@@ -97,7 +117,7 @@ def temperature_gradient(theta,height,surface_level):
 	## temperature gradients ----- kelvin/kilometer
 	## midpoint heights ------ meters 
 	#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	assert (len(theta.shape) == 4),"arrays must be 4 dimensional (time, height, lat, lon"
+	assert (len(theta.shape) == 4),"arrays must be 4 dimensional (time, height, lat, lon)"
 	assert (theta.shape == height.shape),"Theta and Height must be the same shape"
 
 	assert (type(theta) is np.ndarray),"Theta must be an numpy.ndarray"
