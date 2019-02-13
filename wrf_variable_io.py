@@ -111,8 +111,11 @@ def wrf_save_var(variable,directory_path,variable_name):
 	##saves variables to a directory that you specify. saves the variables as
 	##.npy files
 
-	##note that the directory must be present
-
+	try: 
+		os.makedirs(directory_path)
+	except OSError:
+		print('%s Directory Failed to Create. May be already present' %directory_path)
+	##save with .npy extension
 	if directory_path.endswith('/'):
 		save_me = directory_path + variable_name
 	else:
