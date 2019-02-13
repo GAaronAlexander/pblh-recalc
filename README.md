@@ -21,4 +21,33 @@ The temperature gradient method is looks at the Lapse Rates and determines the c
 
 Instructions for a full run can be found in the main.py, and full descriptions of what different functions are doing can be found in related python files. 
 
+## Files Created:
+
+This repository will create 6 different directories:
+
+### extracted_vars:
+
+This directory contains raw WRF variables that are 3-D or 4-D tensors. They are saved as .npy files.
+
+### extracted_vars_static:
+
+This directory contains raw static WRF variables, meaning they are 2-D in nature. They are saved as .npy files.
+
+### recalculated_vars:
+
+Contains recalculated PBLH heights. 
+
+### richardson_plots
+
+Field plots of PBLH recalculated using the richardson number method
+
+### temp_grad_plots
+
+Field plots of PBLH recalculated using the temperature gradient method
+
+### wrf_output_plots
+
+Field plots of PBLH from raw WRF outputs
+
+
 
