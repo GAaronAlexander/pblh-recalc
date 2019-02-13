@@ -64,7 +64,7 @@ PBLH_richardson_heights = PBLH_richardson(richardson_num, x, 0.2)
 PBLH_temp_grad_heights = PBLH_temp_grad(lapse_rate, lapse_rate_height, 2)
 
 wrf_save_var(PBLH_richardson_heights, './recalculated_vars','PBLH_richardson')
-wrf_save_var(PBLH_temp_grad_heights, './recalculated_vars','PBLH_temp_grad)
+wrf_save_var(PBLH_temp_grad_heights, './recalculated_vars','PBLH_temp_grad')
 
 # ~~~~~~~~~~~~~~~~ Plotting Software ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
