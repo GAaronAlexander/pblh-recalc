@@ -10,7 +10,7 @@ file_name = 'wrfout_d02_2006-09-12_00:00:00' #wild card is supported if multiple
 
 plot_richardson_direc = './richardson_plots/'
 plot_temp_grad_direc = './temper_grad_plots/'
-plot_real_wrf_pblh = '/wrf_output_plots/'
+plot_real_wrf_pblh = './wrf_output_plots/'
 
 ##note to change this string for SINGLE FILE if wild card is used to extract across multiple files above^^
 single_netcdf_file = wrf_directory+'/'+file_name ##location of a single wrfout file (needed for plotting)
