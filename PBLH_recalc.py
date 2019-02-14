@@ -34,8 +34,9 @@ def PBLH_richardson(rich_num, height, critical_richard):
 	for time in range(time_loop):
 
 		heights_loop = height[time,:,:,:]
+
+		PBLH_height_loop = np.zeros((lats_size,lon_size))
 		##filter out unstable richardson numbers ()
-		bool_filter = np.zeros((vert_levels,lats_size,lon_size),dtype=bool)
 
 		for i in range(lats_size):
 			for j in range(lon_size):
@@ -46,17 +47,16 @@ def PBLH_richardson(rich_num, height, critical_richard):
 						##improve estimate by checking the model level below this to see if it is 
 						##closer to crticial richardson number, and then flag for saving later
 
-						# if np.abs(rich_num[time,vert,i,j] - critical_richard) > np.abs(rich_num[time,vert-1,i,j] - critical_richard):
-						# 	bool_filter[vert-1,i,j] = True
-						# 	break
+						if np.abs(rich_num[time,vert,i,j] - critical_richard) > np.abs(rich_num[time,vert-1,i,j] - critical_richard):
+							PBLH_height_loop[i,j] = heights_loop[vert-1,i,j]
+							break
 						
-						# else:
-						bool_filter[vert,i,j] = True
-						break
+						else:
+							PBLH_height_loop[i,j] = heights_loop[vert,i,j]
+							break
 		##reshape to original lats and lons dimesions
-		heights_save = heights_loop[bool_filter].reshape((lats_size,lon_size))
 
-		PBLH_heights[time,:,:] = heights_save
+		PBLH_heights[time,:,:] = PBLH_height_loop
 
 
 
